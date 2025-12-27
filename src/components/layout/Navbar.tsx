@@ -39,7 +39,7 @@ export const Navbar = () => {
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary to-accent blur-xl opacity-50 group-hover:opacity-80 transition-opacity" />
             </div>
             <span className="text-foreground font-display font-semibold text-xl hidden sm:block">
-              Sampath<span className="text-primary">.</span>
+              SampathDev<span className="text-primary">.</span>
             </span>
           </a>
 
