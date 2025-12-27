@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,8 +18,8 @@ const contactInfo = [
   {
     icon: Mail,
     label: "Email",
-    value: "hello@example.com",
-    href: "mailto:hello@example.com",
+    value: "binnusampath@gmail.com",
+    href: "mailto:binnusampath@gmail.com",
     gradient: "from-primary to-purple-400",
   },
   {
@@ -32,15 +32,15 @@ const contactInfo = [
   {
     icon: Github,
     label: "GitHub",
-    value: "github.com/username",
-    href: "https://github.com/username",
+    value: "github.com/binnu123",
+    href: "https://github.com/binnu123",
     gradient: "from-orange-500 to-rose-500",
   },
   {
     icon: Linkedin,
     label: "LinkedIn",
-    value: "linkedin.com/in/username",
-    href: "https://linkedin.com/in/username",
+    value: "linkedin.com/in/sampath-kumar-domakonda",
+    href: "https://www.linkedin.com/in/sampath-kumar-domakonda/",
     gradient: "from-blue-500 to-indigo-500",
   },
 ];
@@ -53,6 +53,35 @@ export const ContactSection = () => {
     message: "",
   });
   const { toast } = useToast();
+  const STORAGE_KEY = "contact_form_draft_v1";
+
+  // Load saved draft on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.name || parsed?.email || parsed?.message) {
+          setFormData(parsed);
+          toast({
+            title: "Draft restored",
+            description: "We restored your unsent message.",
+          });
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
+  // Auto-save whenever formData changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    } catch (e) {
+      // ignore
+    }
+  }, [formData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,15 +94,32 @@ export const ContactSection = () => {
       return;
     }
 
+    // Construct mailto link to open user's default mail client with encoded subject & body
+    const recipient =
+      contactInfo.find((c) => c.label === "Email")?.value ??
+      "binnusampath@gmail.com";
+    const subject = `Message from ${formData.name} via Portfolio`;
+    const body = `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`;
+    const mailto = `mailto:${recipient}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+
+    // Open the mail client
+    window.location.href = mailto;
+
+    // UX feedback
     setIsSubmitted(true);
     toast({
-      title: "Message sent!",
-      description: "Thank you for reaching out. I'll get back to you soon.",
+      title: "Opening mail client...",
+      description: "Your email client should open with a prefilled message.",
     });
 
     setTimeout(() => {
       setIsSubmitted(false);
       setFormData({ name: "", email: "", message: "" });
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {}
     }, 3000);
   };
 
