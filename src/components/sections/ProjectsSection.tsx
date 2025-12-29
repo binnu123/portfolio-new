@@ -11,6 +11,7 @@ const projects = [
     techStack: ["Node.js", "MongoDB", "PostgreSQL", "React"],
     featured: true,
     gradient: "from-primary to-purple-500",
+    demoUrl: "https://www.sparrowbid.com/",
   },
   {
     title: "Innovative-IDM",
@@ -21,6 +22,7 @@ const projects = [
     techStack: ["Laravel", "PostgreSQL", "React"],
     featured: true,
     gradient: "from-accent to-cyan-400",
+    demoUrl: "https://innovativeidm.com/",
   },
   {
     title: "CASS",
@@ -31,16 +33,25 @@ const projects = [
     techStack: ["Python", "Flask", "OpenAI", "NLP"],
     featured: true,
     gradient: "from-orange-500 to-rose-500",
+    demoUrl: "https://www.cass.ai/",
   },
   {
-    title: "Data Enrichment",
-    subtitle: "Web Scraping System",
+    title: "Nike Equipment Builder",
+    subtitle: "Sports Equipment Ordering Platform",
     role: "Backend Developer",
     description:
-      "Large-scale data extraction and enrichment system with automated pipelines.",
-    techStack: ["Python", "Scrapy", "PostgreSQL"],
-    featured: false,
-    gradient: "from-blue-500 to-indigo-500",
+      "Enterprise-level equipment builder and order management system for Nike, supporting NFL, MLB, and NCAA sports. Developed scalable backend APIs to handle custom equipment configurations, multi-league workflows, secure admin access, and high-volume order processing.",
+    techStack: [
+      "Node.js",
+      "MongoDB",
+      "REST APIs",
+      "Role-Based Access Control",
+      "GraphQL",
+      "AWS",
+    ],
+    featured: true,
+    gradient: "from-orange-500 to-red-500",
+    demoUrl: "https://www.eqbuilder.com/admin/",
   },
   {
     title: "Surechain",
@@ -48,9 +59,27 @@ const projects = [
     role: "Full Stack Developer",
     description:
       "Secure B2B commerce platform with role-based access control and multi-tenant architecture.",
-    techStack: ["Node.js", "Next.js", "MySQL"],
+    techStack: ["Node.js", "Next.js", "MySQL", "PostgreSQL", "Google Cloud"],
     featured: true,
     gradient: "from-emerald-500 to-teal-500",
+    demoUrl: "https://surechain.ai",
+  },
+  {
+    title: "Grit-Well Platform",
+    subtitle: "Health & Wellness Web Application",
+    role: "Backend Developer",
+    description:
+      "A wellness and self-improvement platform designed to help users build healthy habits and track personal growth. Developed secure backend APIs to manage user onboarding, authentication, profile management, and scalable data handling for user-centric features.",
+    techStack: [
+      "Node.js",
+      "MongoDB",
+      "REST APIs",
+      "Authentication & Authorization",
+      "AWS",
+    ],
+    featured: false,
+    gradient: "from-teal-500 to-cyan-500",
+    demoUrl: "https://www.app.grit-well.com",
   },
 ];
 
@@ -115,22 +144,41 @@ export const ProjectsSection = () => {
 
                 {/* Actions */}
                 <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="rounded-full group/btn glass"
-                  >
-                    <Github size={14} />
-                    <span>Code</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="rounded-full group/btn glass"
-                  >
-                    <ArrowUpRight size={14} />
-                    <span>Demo</span>
-                  </Button>
+                  {project.codeUrl && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="rounded-full group/btn glass"
+                    >
+                      <a
+                        href={project.codeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Github size={14} />
+                        <span>Code</span>
+                      </a>
+                    </Button>
+                  )}
+
+                  {project.demoUrl && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="rounded-full group/btn glass"
+                    >
+                      <a
+                        href={project.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ArrowUpRight size={14} />
+                        <span>Demo</span>
+                      </a>
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
