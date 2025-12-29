@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MousePointer2 } from "lucide-react";
-import profilePhoto from "@/assets/profile-photo.jpg";
+import AnimationLottie from "@/components/AnimationLottie";
+import portfolio from "@/assets/lottie/portfolio3.json";
 
 export const HeroSection = () => {
   return (
@@ -24,7 +25,7 @@ export const HeroSection = () => {
           {/* Left Content */}
           <div className="order-2 lg:order-1">
             {/* Status badge */}
-            <div className="opacity-0 animate-slide-up inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-8">
+            <div className="hidden md:inline-flex opacity-0 animate-slide-up items-center gap-2 glass rounded-full px-4 py-2 mb-8">
               <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
               <span className="text-sm text-muted-foreground">
                 Available for opportunities
@@ -91,34 +92,17 @@ export const HeroSection = () => {
             </div>
           </div>
 
-          {/* Right Content - Profile Image */}
-          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-            <div className="opacity-0 animate-fade-in animation-delay-200 relative">
-              {/* Glow background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/40 to-accent/40 rounded-3xl blur-3xl scale-110 pulse-glow" />
-
-              {/* Profile container */}
-              <div className="relative">
-                {/* Decorative ring */}
-                <div className="absolute -inset-4 rounded-3xl border border-primary/20 floating" />
-                <div className="absolute -inset-8 rounded-3xl border border-accent/10 floating-slow" />
-
-                {/* Profile Image */}
-                <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-3xl overflow-hidden glass p-1">
-                  <img
-                    src={profilePhoto}
-                    alt="Sampath Kumar Domakonda"
-                    className="w-full h-full object-cover rounded-2xl"
-                  />
-                </div>
-
-                {/* Floating badges */}
-                <div className="absolute -top-4 -right-4 glass rounded-2xl px-4 py-2 floating">
-                  <span className="text-sm font-medium">🚀 Full Stack</span>
-                </div>
-                <div className="absolute -bottom-4 -left-4 glass rounded-2xl px-4 py-2 floating-slow animation-delay-300">
-                  <span className="text-sm font-medium">⚡ 4+ Years</span>
-                </div>
+          {/* Right Content - Animation Placeholder (Lottie) */}
+          <div className="hidden md:flex order-1 lg:order-2 justify-center lg:justify-end">
+            <div className="opacity-0 animate-fade-in animation-delay-200">
+              <div
+                className="w-full max-w-[460px] md:max-w-[640px] lg:max-w-[760px] 2xl:max-w-[880px] h-[280px] md:h-[340px] lg:h-[420px] 2xl:h-[480px]"
+                aria-hidden="true"
+              >
+                <AnimationLottie
+                  animationPath={portfolio}
+                  className="w-full h-full"
+                />
               </div>
             </div>
           </div>

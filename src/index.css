@@ -5,7 +5,50 @@
 @tailwind utilities;
 
 @layer base {
+  /* Light theme (default) */
   :root {
+    --background: 220 10% 96%; /* softer off-white */
+    --foreground: 220 15% 10%;
+
+    --card: 0 0% 100%; /* keep cards pure white for contrast */
+    --card-foreground: 220 15% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 10%;
+
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 12% 96%;
+    --secondary-foreground: 220 15% 10%;
+
+    --muted: 220 12% 95%;
+    --muted-foreground: 220 10% 48%;
+
+    --accent: 172 66% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 12% 90%;
+    --input: 220 12% 90%;
+    --ring: 262 83% 58%;
+
+    --radius: 1rem;
+
+    --sidebar-background: 220 10% 96%;
+    --sidebar-foreground: 220 15% 10%;
+    --sidebar-primary: 262 83% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 12% 96%;
+    --sidebar-accent-foreground: 220 15% 10%;
+    --sidebar-border: 220 12% 90%;
+    --sidebar-ring: 262 83% 58%;
+  }
+
+  /* Dark theme overrides (applied when <html class="dark">) */
+  .dark {
     --background: 240 10% 4%;
     --foreground: 0 0% 98%;
 
@@ -57,7 +100,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased transition-colors duration-300;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -81,6 +124,88 @@
     @apply bg-card/60 backdrop-blur-2xl border border-border/50;
   }
 
+  /* Navbar glass variant: slightly more translucent for header */
+  .navbar-glass {
+    @apply bg-card/30 backdrop-blur-md border border-border/40;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease, padding 0.25s ease;
+  }
+
+  /* Button glass variant */
+  .btn-glass {
+    @apply bg-card/20 backdrop-blur-sm border border-border/30 text-foreground;
+    transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .btn-glass:hover {
+    @apply bg-card/40;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+  }
+
+  /* Nav link liquid hover effect */
+  :root {
+    --nav-liquid: hsl(var(--primary) / 0.12);
+    /* keep glass overlay consistent to avoid abrupt color changes during theme toggle */
+    --nav-liquid-glass: rgba(255,255,255,0.06);
+  }
+  .dark {
+    --nav-liquid: hsl(var(--primary) / 0.16);
+  }
+
+  .nav-link {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--liquid-size, 120px);
+    height: var(--liquid-size, 120px);
+    border-radius: 999px;
+    transform: translate(calc(var(--x, 50%) - 50%), calc(var(--y, 50%) - 50%)) scale(0.8);
+    background: radial-gradient(circle at center, var(--nav-liquid) 0%, transparent 60%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    will-change: transform, opacity;
+    z-index: 0;
+  }
+
+  /* Avoid blinking when clicking: keep ::before visible/steady during active state */
+  .nav-link:active::before {
+    transition: none !important;
+    opacity: 0.9 !important;
+    transform: translate(calc(var(--x, 50%) - 50%), calc(var(--y, 50%) - 50%)) scale(2.6) !important;
+  }
+
+  /* remove tap highlight on touch devices to avoid flash */
+  .nav-link, .nav-link * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Slightly different overlay for glass-styled buttons (subtle, glassy) */
+  .nav-link.btn-glass::before {
+    background: radial-gradient(circle at center, var(--nav-liquid-glass) 0%, transparent 50%);
+    width: var(--liquid-size, 80px);
+    height: var(--liquid-size, 80px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .nav-link:hover::before {
+    opacity: 1;
+    transform: translate(calc(var(--x, 50%) - 50%), calc(var(--y, 50%) - 50%)) scale(2.6);
+  }
+
+  .nav-link > * {
+    position: relative;
+    z-index: 10;
+  }
+
   .glow-primary {
     box-shadow: 0 0 60px hsl(262 83% 58% / 0.3), 0 0 100px hsl(262 83% 58% / 0.1);
   }
@@ -90,12 +215,43 @@
   }
 
   .card-modern {
-    @apply bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl transition-all duration-500;
+    position: relative;
+    z-index: 0;
+    /* Use layered backgrounds so the gradient appears as an outer border (border-box)
+       while the card surface uses the card color (padding-box) */
+    border-radius: 1rem;
+    padding: 1px; /* expose the border area */
+    background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+                linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent))) border-box;
+    border: 1px solid transparent;
+    box-shadow: 0 8px 20px rgba(15,23,42,0.06);
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  /* Glow pseudo-element (subtle, clipped by overflow and rounded corners) */
+  .card-modern::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.06), hsl(var(--accent) / 0.04));
+    filter: blur(32px);
+    opacity: 0;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    z-index: -1;
+    pointer-events: none;
+    transform: translateY(8px);
   }
 
   .card-modern:hover {
-    @apply bg-card/70 border-primary/30 -translate-y-1;
-    box-shadow: 0 20px 40px hsl(0 0% 0% / 0.3), 0 0 60px hsl(262 83% 58% / 0.1);
+    transform: translateY(-6px);
+    box-shadow: 0 30px 60px rgba(15,23,42,0.15), 0 6px 30px hsl(var(--primary) / 0.06);
+  }
+
+  .card-modern:hover::after {
+    opacity: 1;
+    transform: translateY(-4px);
   }
 
   .btn-glow {
